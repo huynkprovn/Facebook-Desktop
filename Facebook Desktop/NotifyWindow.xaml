@@ -1,0 +1,11 @@
+﻿<Controls:MetroWindow x:Class="Facebook_Desktop.NotifyWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+
+        Title="NotifyWindow" Height="200" Width="300" Loaded="Window_Loaded" AllowsTransparency="False" ResizeMode="NoResize" WindowStyle="None">
+    <Grid>
+        <Button x:Name="HideButton" Content="_" HorizontalAlignment="Left" VerticalAlignment="Top" Width="25" Margin="275,0,0,0" Click="HideButton_Click"/>
+
+    </Grid>
+</Controls:MetroWindow>
