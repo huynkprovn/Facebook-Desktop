@@ -51,11 +51,15 @@ namespace Facebook_Desktop.Pages
             Core.xmppConnect = new agsXMPP.XmppClientConnection("chat.facebook.com");
             Core.xmppConnect.Port = 5222;
             Core.xmppConnect.OnLogin += xmppConnect_OnLogin;
+            Core.xmppConnect.OnMessage += Core.xmppConnect_OnMessage;
             Core.xmppConnect.Open(Core.Username, Core.Password);
         }
 
+        
+
         void xmppConnect_OnLogin(object sender)
         {
+            Core.SwitchPage<MainPage>();
         }
     }
 }

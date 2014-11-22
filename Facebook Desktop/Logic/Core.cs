@@ -97,6 +97,11 @@ namespace Facebook_Desktop.Logic
         internal static string Username = "";
 
         internal static string Password = "";
+
+        internal static void xmppConnect_OnMessage(object sender, agsXMPP.protocol.client.Message msg)
+        {
+
+        }
         #endregion Chat
     }
 }
