@@ -62,6 +62,26 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Elements\ChatBoxControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Elements\ChatItemMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Elements\InnerChatItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Elements\PlayerChatControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Elements\SmallChatItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Elements\WatermarkTextbox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -73,6 +93,21 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Elements\ChatBoxControl.xaml.cs">
+      <DependentUpon>ChatBoxControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\ChatItemMessage.xaml.cs">
+      <DependentUpon>ChatItemMessage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\InnerChatItem.xaml.cs">
+      <DependentUpon>InnerChatItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\PlayerChatControl.xaml.cs">
+      <DependentUpon>PlayerChatControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Elements\SmallChatItem.xaml.cs">
+      <DependentUpon>SmallChatItem.xaml</DependentUpon>
     </Compile>
     <Compile Include="Elements\WatermarkTextbox.xaml.cs">
       <DependentUpon>WatermarkTextbox.xaml</DependentUpon>
@@ -94,6 +129,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Pages\NotifyWindowPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NotifyWindow.xaml.cs">
@@ -104,6 +147,9 @@
     </Compile>
     <Compile Include="Pages\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\NotifyWindowPage.xaml.cs">
+      <DependentUpon>NotifyWindowPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -1,42 +1,28 @@
-﻿using Facebook_Desktop.Logic;
-using MahApps.Metro.Controls;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using Facebook_Desktop.Logic;
+using Facebook_Desktop.Pages;
 
 namespace Facebook_Desktop
 {
     /// <summary>
-    /// Interaction logic for NotifyWindow.xaml
+    ///     Interaction logic for NotifyWindow.xaml
     /// </summary>
-    public partial class NotifyWindow : MetroWindow
+    public partial class NotifyWindow
     {
-        public NotifyWindow()
+        public NotifyWindow(NotifyWindowPage contentPage)
         {
             InitializeComponent();
-            Core.notifywin = this;
+            _mainContent.Content = contentPage.Content;
+            Resources.Source = new Uri("/Facebook Desktop;component/Styles.xaml", UriKind.RelativeOrAbsolute);  
+            Core.Notifywin = this;
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            var desktopWorkingArea = System.Windows.SystemParameters.WorkArea;
-            this.Left = desktopWorkingArea.Right - this.Width;
-            this.Top = desktopWorkingArea.Bottom - this.Height;
-        }
-
-        private void HideButton_Click(object sender, RoutedEventArgs e)
-        {
-            Core.Hide(typeof(NotifyWindow));
+            var desktopWorkingArea = SystemParameters.WorkArea;
+            Left = desktopWorkingArea.Right - Width;
+            Top = desktopWorkingArea.Bottom - Height;
         }
     }
 }

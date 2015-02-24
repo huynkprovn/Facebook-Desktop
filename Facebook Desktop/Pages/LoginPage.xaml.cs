@@ -1,65 +1,161 @@
-﻿using Facebook_Desktop.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using agsXMPP;
+using agsXMPP.protocol.client;
+using Facebook_Desktop.Logic;
+using agsXMPP.protocol.iq.roster;
+using Facebook_Desktop.Elements;
 
 namespace Facebook_Desktop.Pages
 {
     /// <summary>
-    /// Interaction logic for LoginPage.xaml
+    ///     Interaction logic for LoginPage.xaml
     /// </summary>
-    public partial class LoginPage : Page
+    public partial class LoginPage
     {
         public LoginPage()
         {
             InitializeComponent();
         }
 
-        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        private void PasswordBoxPasswordChanged(object sender, RoutedEventArgs e)
         {
-            if (PasswordBox.Password.Length > 0)
+            if (_passwordBox.Password.Length > 0)
             {
                 var fadeLabelOutAnimation = new DoubleAnimation(0, TimeSpan.FromSeconds(0.1));
-                PasswordLabel.BeginAnimation(Label.OpacityProperty, fadeLabelOutAnimation);
+                _passwordLabel.BeginAnimation(OpacityProperty, fadeLabelOutAnimation);
             }
             else
             {
                 var fadeLabelInAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.1));
-                PasswordLabel.BeginAnimation(Label.OpacityProperty, fadeLabelInAnimation);
+                _passwordLabel.BeginAnimation(OpacityProperty, fadeLabelInAnimation);
             }
 
             var fadeInAnimation = new DoubleAnimation(1, TimeSpan.FromSeconds(0.5));
-            HintLabel.BeginAnimation(Label.OpacityProperty, fadeInAnimation);
+            _hintLabel.BeginAnimation(OpacityProperty, fadeInAnimation);
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private void LoginButtonClick(object sender, RoutedEventArgs e)
         {
-            Core.Username = UsernameTextBox.WaterTextbox.Text;
-            Core.Password = PasswordBox.Password;
-            Core.xmppConnect = new agsXMPP.XmppClientConnection("chat.facebook.com");
-            Core.xmppConnect.Port = 5222;
-            Core.xmppConnect.OnLogin += xmppConnect_OnLogin;
-            Core.xmppConnect.OnMessage += Core.xmppConnect_OnMessage;
-            Core.xmppConnect.Open(Core.Username, Core.Password);
+            Core.Username = _usernameTextBox._waterTextbox.Text;
+            Core.Password = _passwordBox.Password;
+            Core.XmppConnect = new XmppClientConnection("chat.facebook.com") { Port = 5222 };
+            Core.XmppConnect.OnRosterItem += xmpp_OnRosterItem;
+            Core.XmppConnect.OnRosterItem += (o, g) =>
+            {
+                if (g.GetAttribute("name") == "Facebook User")
+                    return;
+                var containsGroup = false;
+                foreach (var group in Core.Groups.Where(group => g.GetAttribute("group") == @group.GroupName))
+                    containsGroup = true;
+                if (!containsGroup)
+                    Core.Groups.Add(new Group(g.GetAttribute("group")));
+                var item = new ChatPlayerItem
+                {
+                    Jid = g.Jid,
+                    Group = g.GetAttribute("group"),
+                    Username = g.GetAttribute("name")
+                };
+                foreach (var items in Core.Presences.Where(items => items.GetAttribute("name") == g.GetAttribute("name")))
+                {
+                    item.IsOnline = true;
+                }
+                if (!Core.AllPlayers.ContainsKey(g.GetAttribute("name")))
+                    Core.AllPlayers.Add(g.GetAttribute("name"), item);
+            };
+            Core.XmppConnect.OnPresence += XmppConnectOnOnPresence;
+            Core.XmppConnect.OnLogin += xmppConnect_OnLogin;
+            Core.XmppConnect.OnMessage += Core.xmppConnect_OnMessage;
+            Core.XmppConnect.Open(Core.Username, Core.Password);
         }
 
-        
-
-        void xmppConnect_OnLogin(object sender)
+        public void XmppConnectOnOnPresence(object sender, Presence pres)
         {
-            Core.SwitchPage<MainPage>();
+            try
+            {
+                if (pres.GetAttribute("name") == "Facebook User")
+                {
+                    return;
+                }
+                Core.Presences.Add(pres);
+                try
+                {
+                    var chatItem = new ChatPlayerItem
+                    {
+                        Group = pres.GetAttribute("group"),
+                        IsOnline = true,
+                        Jid = new Jid(pres.GetAttribute("jid")),
+                        Messages = new List<string>(),
+                        Username = pres.GetAttribute("name")
+                    };
+                    Core.AllPlayers.Add(pres.GetAttribute("name"), chatItem);
+                }
+                catch
+                {
+                    var item = Core.AllPlayers[pres.GetAttribute("name")];
+                    Core.AllPlayers.Remove(pres.GetAttribute("name"));
+                    item.IsOnline = true;
+                    Core.AllPlayers.Add(pres.GetAttribute("name"), item);
+                }
+            }
+            catch
+            {
+                //MessageBox.Show(ex.ToString());
+            }
+        }
+
+        public void xmpp_OnRosterItem(object sender, RosterItem item)
+        {
+            try
+            {
+                Core.UserList.Add(item);
+                Core.RunOnUiThread(() =>
+                    {
+                        if (item.GetAttribute("name") == "Facebook User")
+                        {
+                            return;
+                        }
+                        try
+                        {
+                            var chatItem = new ChatPlayerItem
+                            {
+                                Group = item.GetAttribute("group"),
+                                Jid = item.Jid,
+                                Messages = new List<string>(),
+                                Username = item.GetAttribute("name")
+                            };
+                            Core.AllPlayers.Add(item.GetAttribute("name"), chatItem);
+                        }
+                        catch
+                        {
+                            var itemPlayer = Core.AllPlayers[item.GetAttribute("name")];
+                            Core.AllPlayers.Remove(item.GetAttribute("name"));
+                            Core.AllPlayers.Add(item.GetAttribute("name"), itemPlayer);
+                        }
+                        var control = new PlayerChatControl
+                        {
+                            _playerNameLabel = { Content = item.GetAttribute("name") },
+                            Tag = Core.AllPlayers[item.GetAttribute("name")]
+                        };
+                        Core.PlayerChatControls.Add(item.GetAttribute("jid"), control);
+                    });
+            }
+            catch
+            {
+                //MessageBox.Show(ex.ToString());
+            }
+        }
+
+        public void xmppConnect_OnLogin(object sender)
+        {
+            Core.RunOnUiThread(() =>
+                {
+                    Core.SwitchPage<MainPage>(true, this);
+                });
         }
     }
 }

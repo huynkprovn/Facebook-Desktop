@@ -1,0 +1,21 @@
+﻿<Page x:Class="Facebook_Desktop.Pages.NotifyWindowPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      mc:Ignorable="d" 
+      Height="200" Width="300"
+	Title="NotifyWindow">
+
+    <Grid>
+        <Label x:Name="_titleLabel" Content="Notification" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0" Width="280"/>
+        <RichTextBox x:Name="_messageBox" HorizontalAlignment="Left" Height="146" VerticalAlignment="Top" Width="270" Margin="20,44,0,0">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text=""/>
+                </Paragraph>
+            </FlowDocument>
+        </RichTextBox>
+
+    </Grid>
+</Page>

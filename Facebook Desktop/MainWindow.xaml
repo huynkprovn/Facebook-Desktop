@@ -1,10 +1,10 @@
 ﻿<Controls:MetroWindow x:Class="Facebook_Desktop.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="768" Width="1280" MinHeight="550" MinWidth="1024">
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      WindowStartupLocation="CenterScreen"
+                      Title="Facebook Desktop" Height="768" Width="1280" MinHeight="550" MinWidth="1024" ShowTitleBar="True">
     <Grid>
-        <ContentControl x:Name="Container" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" />
+        <ContentControl x:Name="_container" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,0,0,0" ClipToBounds="True"/>
     </Grid>
 </Controls:MetroWindow>
